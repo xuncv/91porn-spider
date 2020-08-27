@@ -1,6 +1,11 @@
+# 爬虫从这里出发
 startUrl: http://www.91porn.com/video.php?category=rf
 socks5Proxy: 127.0.0.1:10808
+# 保存目录
 saveDir: download
+# 并发下载数
 workers: 2
+# 筛选积分数 》= 2000
 points: 2000
+# 筛选收藏数 》= 200
 collect: 200
