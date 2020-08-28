@@ -55,7 +55,7 @@ func random_ip() string {
 func main() {
 	worker := downloader.New(works,socks5Proxy,"download")
 	c := colly.NewCollector(
-			//colly.AllowedDomains("91porn.com"),
+			colly.AllowedDomains("91porn.com","www.91porn.com"),
 			//colly.Async(true),
 		)
 	c.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
@@ -69,6 +69,7 @@ func main() {
 	})
 	c.OnHTML(".videos-text-align", func(element *colly.HTMLElement) {
 		//title:=element.ChildText(".video-title")
+		//fmt.Println(title)
 		params := infoRe.FindStringSubmatch(element.Text)
 		vCollect,_ := strconv.Atoi(params[1])
 		vPoints,_ := strconv.Atoi(params[2])
@@ -92,6 +93,10 @@ func main() {
 
 	c.OnHTML("span[class=pagingnav] + a[href]", func(element *colly.HTMLElement) {
 		c.Visit("http://91porn.com/v.php" + element.Attr("href"))
+	})
+
+	c.OnError(func(response *colly.Response, err error) {
+		fmt.Println(err)
 	})
 	fmt.Println( config.GetString("startUrl") )
 	c.Visit( config.GetString("startUrl") )
