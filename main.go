@@ -82,12 +82,19 @@ func main() {
 		title := element.ChildText(".login_register_header[align=left]")
 		videoEle := element.ChildText("video")
 		params := re.FindStringSubmatch(videoEle)
-		vm := otto.New()
-		vm.Run(js)
-		value,err := vm.Call("strencode",nil,params[1],params[2])
-		if err==nil{
-			params = re2.FindStringSubmatch(value.String())
-			worker.Push(title,params[1])
+		if len(params)==3{
+			vm := otto.New()
+			vm.Run(js)
+			value,err := vm.Call("strencode",nil,params[1],params[2])
+			if err==nil{
+				params = re2.FindStringSubmatch(value.String())
+				worker.Push(title,params[1])
+			}
+		}else{
+			src := element.ChildAttr("video source","src")
+			if len(src)>0{
+				worker.Push(title,src)
+			}
 		}
 	})
 
