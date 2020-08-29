@@ -2,6 +2,7 @@ package downloader
 
 import (
 	"context"
+	"fmt"
 	"github.com/vbauerster/mpb/v5"
 	"github.com/vbauerster/mpb/v5/decor"
 	"golang.org/x/net/proxy"
@@ -9,11 +10,11 @@ import (
 	"io"
 	"net"
 	"net/http"
+	_ "net/url"
 	"os"
 	"path"
 	"sync"
 	"time"
-	_ "net/url"
 )
 
 type Worker struct {
@@ -95,6 +96,7 @@ func (w *Worker)DownloadFile(title string,url string) error {
 	tmppath := w.TempDir + "/" + title + ".tmp"
 	savePath := w.SaveDir + "/" +title + ".mp4"
 	if IsExist(savePath){
+		fmt.Println(title + " IsExist")
 		return nil
 	}
 	out, err := os.Create( tmppath )
@@ -104,7 +106,11 @@ func (w *Worker)DownloadFile(title string,url string) error {
 	client := &http.Client{
 		Transport: w.Trans,
 	}
-	resp, err := client.Get(url)
+
+	req, err := http.NewRequest("GET",url,nil)
+	req.Header.Add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36")
+	//req.RemoteAddr = "127.0.0.1:10808"
+	resp, err := client.Do(req)
 	if err != nil {
 		out.Close()
 		return err
@@ -159,7 +165,6 @@ func (w *Worker)Push(title string,url string)  {
 			<- w.Workers
 		}()
 		url = html.UnescapeString(url)
-
 		w.DownloadFile(title,url)
 	}(title,url)
 }

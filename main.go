@@ -53,7 +53,7 @@ func random_ip() string {
 }
 
 func main() {
-	worker := downloader.New(works,socks5Proxy,"download")
+	worker := downloader.New(works,socks5Proxy,saveDir)
 	c := colly.NewCollector(
 			colly.AllowedDomains("91porn.com","www.91porn.com"),
 			//colly.Async(true),
@@ -99,6 +99,7 @@ func main() {
 	})
 
 	c.OnHTML("span[class=pagingnav] + a[href]", func(element *colly.HTMLElement) {
+		fmt.Println("next page:" + "http://91porn.com/v.php" + element.Attr("href"))
 		c.Visit("http://91porn.com/v.php" + element.Attr("href"))
 	})
 
