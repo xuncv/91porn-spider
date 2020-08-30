@@ -11,11 +11,11 @@ jobs:
   build:
     name: Build
     runs-on: ${{ matrix.os }}
-    steps:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
 
+    steps:
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
