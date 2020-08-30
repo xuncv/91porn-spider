@@ -71,11 +71,13 @@ func main() {
 		//title:=element.ChildText(".video-title")
 		//fmt.Println(title)
 		params := infoRe.FindStringSubmatch(element.Text)
-		vCollect,_ := strconv.Atoi(params[1])
-		vPoints,_ := strconv.Atoi(params[2])
-		content := element.ChildAttr("a","href")
-		if vCollect >= collect && vPoints >= points {
-			c.Visit(content)
+		if len(params)==3 {
+			vCollect, _ := strconv.Atoi(params[1])
+			vPoints, _ := strconv.Atoi(params[2])
+			content := element.ChildAttr("a", "href")
+			if vCollect >= collect && vPoints >= points {
+				c.Visit(content)
+			}
 		}
 	})
 	c.OnHTML(".col-md-8.col-ms-8.col-xs-12.video-border", func(element *colly.HTMLElement) {

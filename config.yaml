@@ -1,5 +1,5 @@
 # 爬虫从这里出发
-startUrl: http://www.91porn.com/video.php?category=rf&page=1
+startUrl: http://www.91porn.com/video.php?category=rf&page=120
 socks5Proxy: 
 # 保存目录
 saveDir: X:\av\91porn
