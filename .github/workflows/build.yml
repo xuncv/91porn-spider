@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        
+
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
