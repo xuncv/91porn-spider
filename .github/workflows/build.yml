@@ -21,17 +21,7 @@ jobs:
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          Changes in this Release
-          - First Change
-          - Second Change
-        draft: false
-        prerelease: false
+
     - name: Get dependencies
       run: |
         go get -v -t -d ./...
@@ -41,4 +31,17 @@ jobs:
         fi
 
     - name: Build
-      run: go build -v .
+      run: go build -v -o 91porn .
+
+    - name: Gzip
+      run: |
+        mkdir 91porn-${{ matrix.os }}
+        cp 91porn 91porn-${{ matrix.os }}
+        tar -czvf 91porn-${{ matrix.os }}.tar.gz 91porn-${{ matrix.os }}
+
+    - name: Upload to release
+      uses: JasonEtco/upload-to-release@master
+      with:
+        args: 91porn-${{ matrix.os }}.tar.gz application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
