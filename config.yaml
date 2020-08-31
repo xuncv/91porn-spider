@@ -1,6 +1,6 @@
 # 爬虫从这里出发
-startUrl: http://www.91porn.com/video.php?category=rf&page=120
-socks5Proxy: 
+startUrl: http://www.91porn.com/video.php?category=rf&page=1
+socks5Proxy: 127.0.0.1:10808
 # 保存目录
 saveDir: X:\av\91porn
 # 并发下载数

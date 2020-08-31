@@ -1,15 +1,13 @@
 package downloader
 
 import (
-	"context"
 	"fmt"
 	"github.com/vbauerster/mpb/v5"
 	"github.com/vbauerster/mpb/v5/decor"
-	"golang.org/x/net/proxy"
 	"html"
 	"io"
-	"net"
 	"net/http"
+	"net/url"
 	_ "net/url"
 	"os"
 	"path"
@@ -63,13 +61,16 @@ func New(workersNum int,socks5Proxy string,saveDir string)(*Worker){
 	var trans *http.Transport
 	if socks5Proxy!=""{
 		// setup a http client
-		dialer, _ := proxy.SOCKS5("tcp", socks5Proxy, nil, proxy.Direct)
-		dc := dialer.(interface {
-			DialContext(ctx context.Context, network, addr string) (net.Conn, error)
-		})
-
+		//dialer, _ := proxy.SOCKS5("tcp", socks5Proxy, nil, proxy.Direct)
+		//dc := dialer.(interface {
+		//	DialContext(ctx context.Context, network, addr string) (net.Conn, error)
+		//})
+		proxy := func(_ *http.Request) (*url.URL, error) {
+			return url.Parse("socks5://" + socks5Proxy)
+		}
 		trans = &http.Transport{
-			DialContext: dc.DialContext,
+			Proxy: proxy,
+			//DialContext: dc.DialContext,
 			IdleConnTimeout:       60 * time.Second,
 			TLSHandshakeTimeout:   10 * time.Second,
 			ExpectContinueTimeout: 1 * time.Second,
@@ -107,10 +108,10 @@ func (w *Worker)DownloadFile(title string,url string) error {
 		Transport: w.Trans,
 	}
 
-	req, err := http.NewRequest("GET",url,nil)
-	req.Header.Add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36")
+	//req, err := http.NewRequest("GET",url,nil)
+	//req.Header.Add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36")
 	//req.RemoteAddr = "127.0.0.1:10808"
-	resp, err := client.Do(req)
+	resp, err := client.Get(url)
 	if err != nil {
 		out.Close()
 		return err
