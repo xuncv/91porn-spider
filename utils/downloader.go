@@ -109,14 +109,25 @@ func (w *Worker)DownloadFile(title string,url string) error {
 	}
 
 	//req, err := http.NewRequest("GET",url,nil)
-	//req.Header.Add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36")
+	//req.Header.Add("Accept","*/*")
+	//req.Header.Add("Connection","keep-alive")
+	//req.Header.Add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36")
+	//req.Header.Add("Referer","http://www.91porn.com/")
+	//req.Header.Add("Accept-Encoding","identity;q=1, *;q=0")
+	//req.Header.Add("Accept-Language","zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
+	//req.Header.Add("Sec-Fetch-Dest","video")
+	//req.Header.Add("Sec-Fetch-Mode","no-cors")
+	//req.Header.Add("Sec-Fetch-Site","cross-site")
 	//req.RemoteAddr = "127.0.0.1:10808"
+	//resp,err := client.Do(req)
 	resp, err := client.Get(url)
+	fmt.Println(url)
 	if err != nil {
 		out.Close()
 		return err
 	}
 	defer resp.Body.Close()
+	fmt.Println(resp.StatusCode )
 	if resp.StatusCode == http.StatusNotFound {
 		return http.ErrMissingFile
 	}

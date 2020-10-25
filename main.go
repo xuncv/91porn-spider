@@ -13,6 +13,7 @@ import (
 )
 
 var(
+	xIp string
 	config *viper.Viper
 	socks5Proxy string
 	saveDir string
@@ -56,7 +57,7 @@ func random_ip() string {
 func main() {
 	worker := downloader.New(works,socks5Proxy,saveDir)
 	c := colly.NewCollector(
-			colly.AllowedDomains("91porn.com","www.91porn.com"),
+			//colly.AllowedDomains("91porn.com","www.91porn.com","cfdc.91p52.com","*.91p52.com"),
 			//colly.Async(true),
 		)
 	c.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
@@ -66,8 +67,9 @@ func main() {
 	}
 	c.OnRequest(func(request *colly.Request) {
 		request.Headers.Set("accept-language","zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
-		request.Headers.Set("X-Forwarded-For",random_ip())
+		//request.Headers.Set("X-Forwarded-For","104.26.2.41")
 	})
+
 	c.OnHTML(".videos-text-align", func(element *colly.HTMLElement) {
 		//title:=element.ChildText(".video-title")
 		//fmt.Println(title)
@@ -99,6 +101,7 @@ func main() {
 				worker.Push(title,src)
 			}
 		}
+		//xIp = random_ip()
 	})
 
 	c.OnHTML("span[class=pagingnav] + a[href]", func(element *colly.HTMLElement) {
